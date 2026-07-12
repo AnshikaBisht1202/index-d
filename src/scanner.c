@@ -6,6 +6,15 @@
 #include "reader.h"
 #include <stdlib.h>
 
+static int should_skip(const char *name) {
+
+    if (strcmp(name, ".") == 0) return 1;
+    if (strcmp(name, "..") == 0) return 1;
+    if (strcmp(name, ".git") == 0) return 1;
+
+    return 0;
+}
+
 void scan_directory(const char *directory) {
 
     DIR *dir = opendir(directory);
@@ -20,13 +29,17 @@ void scan_directory(const char *directory) {
 
     while ((entry = readdir(dir)) != NULL) {
         
-        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+        if (should_skip(entry->d_name)) {
+            continue;
+        } 
 
             char path[1024];
             snprintf(path, sizeof(path), "%s/%s", directory, entry->d_name);
 
             struct stat info;
-            stat(path, &info);
+            if (stat(path, &info) != 0) {
+                continue;
+            }
             if (stat(path, &info) != 0) {
                 printf("Failed to stat %s\n", path);
                 continue;
@@ -44,7 +57,6 @@ void scan_directory(const char *directory) {
 
             }
             
-        }
     }
     
     closedir(dir);
