@@ -4,6 +4,7 @@
 #include "scanner.h"
 #include <sys/stat.h>
 #include "reader.h"
+#include <stdlib.h>
 
 void scan_directory(const char *directory) {
 
@@ -13,7 +14,7 @@ void scan_directory(const char *directory) {
         printf("Failed to open directory.\n");
         return;
     }
-    printf("Scanning directory: %s\n", directory);
+    printf("Scanning directory: %s\n\n", directory);
 
     struct dirent *entry;
 
@@ -35,7 +36,11 @@ void scan_directory(const char *directory) {
                 scan_directory(path);
             }
             else {
-                read_file(path);
+                char * contents = read_file(path);
+                if (contents != NULL) {
+                    printf("%s\n", contents);
+                    free(contents);
+                }
 
             }
             
