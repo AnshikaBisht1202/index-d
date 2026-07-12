@@ -3,6 +3,7 @@
 #include <string.h>
 #include "scanner.h"
 #include <sys/stat.h>
+#include "reader.h"
 
 void scan_directory(const char *directory) {
 
@@ -25,12 +26,17 @@ void scan_directory(const char *directory) {
 
             struct stat info;
             stat(path, &info);
+            if (stat(path, &info) != 0) {
+                printf("Failed to stat %s\n", path);
+                continue;
+            }
 
             if (S_ISDIR(info.st_mode)) {
                 scan_directory(path);
             }
             else {
-                printf("%s\n", path);
+                read_file(path);
+
             }
             
         }
