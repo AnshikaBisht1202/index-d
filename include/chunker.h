@@ -1,0 +1,1 @@
+void chunk_file(const char *path, const char *contents);

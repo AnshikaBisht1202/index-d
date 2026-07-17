@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include "reader.h"
 #include <stdlib.h>
+#include <chunker.h>
 
 static int should_skip(const char *name) {
 
@@ -37,9 +38,7 @@ void scan_directory(const char *directory) {
             snprintf(path, sizeof(path), "%s/%s", directory, entry->d_name);
 
             struct stat info;
-            if (stat(path, &info) != 0) {
-                continue;
-            }
+          
             if (stat(path, &info) != 0) {
                 printf("Failed to stat %s\n", path);
                 continue;
@@ -49,9 +48,9 @@ void scan_directory(const char *directory) {
                 scan_directory(path);
             }
             else {
-                char * contents = read_file(path);
+                char *contents = read_file(path);
                 if (contents != NULL) {
-                    printf("%s\n", contents);
+                    chunk_file(path, contents);
                     free(contents);
                 }
 
