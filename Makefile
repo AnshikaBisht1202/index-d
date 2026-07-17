@@ -2,7 +2,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -std=c11 -Iinclude
 
-SRCS = src/main.c src/cli.c src/scanner.c src/reader.c src/chunker.c
+SRCS = src/main.c src/cli.c src/scanner.c src/reader.c src/chunker.c src/vector_store.c
 
 TARGET = askie
 

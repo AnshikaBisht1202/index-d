@@ -1,18 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "chunker.h"
+#include "vector_store.h"
 
-typedef struct {
-    char *text;
-    char *path;
-    int chunk_number;
-} Chunk;
-
-void chunk_file(const char *path, const char *contents) {
+int chunk_file(const char *path, const char *contents) {
 
     long len = strlen(contents);
 
     int offset = 0;
+
+    int chunk_number = 0;
 
     const int chunk_size = 500;
 
@@ -29,12 +27,28 @@ void chunk_file(const char *path, const char *contents) {
         }
 
         char *chunk = malloc(actual_chunk_size + 1);
+
+        if (chunk == NULL) {
+            printf("Failed to allocate memory.\n");
+            return 1;
+        }
+
+        Chunk current;
+
         memcpy(chunk, contents + offset, actual_chunk_size);
         chunk[actual_chunk_size] = '\0';
-        printf("\n\nCHUNK\n\n");
-        printf("%s", chunk);
+
+        strcpy(current.path, path);
+        current.chunk_number = chunk_number;
+        current.text_length = actual_chunk_size;
+        strcpy(current.text, chunk);
+
+        save_chunk(&current);
         free(chunk);
+
         offset += actual_chunk_size;
+        chunk_number += 1;
     }
 
+    return chunk_number + 1;
 }

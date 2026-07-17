@@ -13,7 +13,9 @@ int cli_run(int argc, char *argv[])
 
     if (strcmp(argv[1], "index") == 0) {
         if (argc > 2) {
-            scan_directory(argv[2]);
+            remove("data/chunks.bin");
+            int total = scan_directory(argv[2]);
+            printf("\nIndexed %d chunks.\n", total);
             return 0;
         }
         else {

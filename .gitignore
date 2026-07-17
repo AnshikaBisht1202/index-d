@@ -1,2 +1,6 @@
 askie
 *.out
+
+data/chunks.bin
+data/embeddings.bin
+data/metadata.bin
